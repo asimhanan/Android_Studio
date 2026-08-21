@@ -1,0 +1,55 @@
+//java code for price
+public class MainActivity extends AppCompatActivity {
+
+    private EditText rateInput;
+    private TextView pureGoldPriceText, perGramPriceText;
+    private Button calculateButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Initialize views
+        rateInput = findViewById(R.id.rateInput);
+        pureGoldPriceText = findViewById(R.id.pureGoldPriceText);
+        perGramPriceText = findViewById(R.id.perGramPriceText);
+        calculateButton = findViewById(R.id.calculateButton);
+
+        // Set a click listener on the button
+        calculateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calculateGoldPrice();
+            }
+        });
+    }
+
+    private void calculateGoldPrice() {
+        // Get the input value from the EditText
+        String rateStr = rateInput.getText().toString();
+
+        // Check if input is not empty
+        if (!rateStr.isEmpty()) {
+            // Convert the rate to an integer
+            int rate = Integer.parseInt(rateStr);
+
+            // Perform the calculations
+            double graam = rate / 11.66;
+            double p = 15.66;
+            double refinePrice = graam * p;
+
+            // Update the TextViews with the result
+            pureGoldPriceText.setText("Pure gold price: " + refinePrice);
+            perGramPriceText.setText("Per gram price: " + graam);
+        } else {
+            // Handle empty input (optional)
+            pureGoldPriceText.setText("Please enter a rate");
+            perGramPriceText.setText("");
+        }
+    }
+}
+
+
+//xml
+

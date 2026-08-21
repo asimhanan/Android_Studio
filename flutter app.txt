@@ -1,0 +1,346 @@
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart'; // For opening Google
+
+
+//
+void main() {
+  runApp(MyApp());
+}
+
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Navigation Demo',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      debugShowCheckedModeBanner: false,
+      home: LoginPage(),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  void _openGoogle() async {
+    const url = 'https://www.google.com';
+    if (await canLaunchUrl(url as Uri)) {
+      await launchUrl(url as Uri);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Home Page'), backgroundColor: Colors.blue,),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+        Column(
+        children: [
+            Container(
+            width: 300,
+            child: TextField(decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),)
+            ),
+            Container(height: 20,),
+            Container(
+                width: 300,
+                child: TextField(decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),)
+            ),
+            ],
+        ),
+            Column(
+              children: [
+                Container(
+                  width: 300,
+                  height: 25,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PageOne()),
+                    ),
+                    child: Text('Go to Page 1'),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  width: 300,
+                  height: 25,
+                  child: ElevatedButton(
+                    onPressed: _openGoogle,
+                    child: Text('Open Google'),
+                  ),
+                ),
+              ],
+            )
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PageOne extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Page 1')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PageTwo()),
+          ),
+          child: Text('Go to Page 2'),
+        ),
+      ),
+    );
+  }
+}
+
+class PageTwo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Page 2')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => Navigator.popUntil(context, (route) => route.isFirst),
+          child: Text('Back to Home'),
+        ),
+      ),
+    );
+  }
+}
+
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String message = '';
+
+  void _validateLogin() {
+    String username = _usernameController.text;
+    int password = int.tryParse(_passwordController.text) ?? 0;
+
+    int calculatedPassword = username.length * 3;
+
+    if (password == calculatedPassword) {
+      // Navigate to Main Page
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InputPage(),
+        ),
+      );
+    } else {
+      setState(() {
+        message = 'Password is not correct.';
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login Page'),backgroundColor: Colors.blue,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Container(width: 280,
+              child: TextFormField(
+                controller: _usernameController,
+                decoration: InputDecoration(labelText: 'Username',border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
+              ),
+            ),
+            Container(height: 16,),
+            Container(width: 280,
+              child: TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(labelText: 'Password',border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
+                keyboardType: TextInputType.number,
+                obscureText: true,
+              ),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _validateLogin,
+              child: Text('Login'),
+            ),
+            SizedBox(height: 16),
+            Text(
+              message,
+              style: TextStyle(color: Colors.red),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class InputPage extends StatefulWidget {
+  const InputPage({super.key});
+
+  @override
+  _InputPageState createState() => _InputPageState();
+}
+
+class _InputPageState extends State<InputPage> {
+  final TextEditingController airWeightController = TextEditingController();
+  final TextEditingController waterWeightController = TextEditingController();
+
+  late Map<double, double> selectedDict;
+
+  final Map<double, double> dict1 = {92.36: 99.86, 92.37: 89.99, 92.38: 79.99};
+  final Map<double, double> dict2 = {92.36: 99.86, 92.37: 89.99, 92.38: 79.99};
+  final Map<double, double> dict3 = {92.36: 99.86, 92.37: 89.99, 92.38: 79.99};
+
+
+  void calculateAndNavigate() {
+    final double? x = double.tryParse(airWeightController.text);
+    final double? y = double.tryParse(waterWeightController.text);
+
+    if (x == null || y == null || x == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter valid weights!')),
+      );
+      return;
+    }
+
+    double z = 100 / x * y;
+    double roundedZ = double.parse(z.toStringAsFixed(2));
+    double? v = selectedDict[roundedZ];
+
+    if (v != null) {
+      double p = x / 100 * v;
+      double k = 24 / x * p;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultPage(
+            karat: k,
+            pure: p,
+            percentage: v,
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No value found for the calculation.')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('My Silver App'),backgroundColor: Colors.blue,),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+
+            Container(width: 280,
+              child: TextField(
+                controller: airWeightController,
+                decoration:  InputDecoration(labelText: 'Air weight',border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),),
+                keyboardType: TextInputType.number,
+              ),
+            ),
+            SizedBox(height: 16,),
+            Container(width: 280,
+              child: TextField(
+                controller: waterWeightController,
+                decoration:  InputDecoration(labelText: 'Water weight',border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),),
+                keyboardType: TextInputType.number,
+              ),
+             ),
+
+            Container(
+              padding: const EdgeInsets.only(top: 46.0),
+              child:  Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                children: [
+                  ElevatedButton(
+                    onPressed: () => setState(() => selectedDict = dict1),
+                    child: const Text('Copper'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => setState(() => selectedDict = dict2),
+                    child: const Text('Cadium'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => setState(() => selectedDict = dict3),
+                    child: const Text('--Zinc--'),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(top: 46.0),
+              child:  Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+
+                children: [
+                ElevatedButton(
+                onPressed: calculateAndNavigate,
+                child: const Text('Calculate'),
+              ),
+              ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ResultPage extends StatelessWidget {
+  final double karat;
+  final double pure;
+  final double percentage;
+
+  const ResultPage({super.key,
+    required this.karat,
+    required this.pure,
+    required this.percentage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Result Page')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Karat: $karat', style: const TextStyle(fontSize: 18)),
+            Text('Pure: $pure', style: const TextStyle(fontSize: 18)),
+            Text('Percentage: $percentage', style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Back'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

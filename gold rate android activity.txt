@@ -1,0 +1,130 @@
+//xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- Input for gold rate -->
+    <EditText
+        android:id="@+id/editTextGoldRate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter gold rate"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
+
+    <!-- Input for charge -->
+    <EditText
+        android:id="@+id/editTextCharge"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter charge"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/editTextGoldRate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
+
+    <!-- Button to calculate -->
+    <Button
+        android:id="@+id/buttonCalculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calculate"
+        app:layout_constraintTop_toBottomOf="@id/editTextCharge"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <!-- TextView to show Gold Price -->
+    <TextView
+        android:id="@+id/textViewGoldPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gold Price is = "
+        app:layout_constraintTop_toBottomOf="@id/buttonCalculate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <!-- TextView to show Payment -->
+    <TextView
+        android:id="@+id/textViewPayment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Payment is = "
+        app:layout_constraintTop_toBottomOf="@id/textViewGoldPrice"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+//java
+
+package com.example.goldpricecalculator;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Bind UI elements
+        EditText editTextGoldRate = findViewById(R.id.editTextGoldRate);
+        EditText editTextCharge = findViewById(R.id.editTextCharge);
+        Button buttonCalculate = findViewById(R.id.buttonCalculate);
+        TextView textViewGoldPrice = findViewById(R.id.textViewGoldPrice);
+        TextView textViewPayment = findViewById(R.id.textViewPayment);
+
+        // Set click listener for the button
+        buttonCalculate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get inputs from EditText fields
+                String rateInput = editTextGoldRate.getText().toString();
+                String chargeInput = editTextCharge.getText().toString();
+
+                // Check if the input fields are not empty
+                if (!rateInput.isEmpty() && !chargeInput.isEmpty()) {
+                    // Parse input to double
+                    double rate = Double.parseDouble(rateInput);
+                    double charge = Double.parseDouble(chargeInput);
+
+                    // Constants and calculation
+                    double p = 2.23;
+                    double r = rate / 11.664 * p;
+                    double c = r - charge;
+
+                    // Set formatted results to the TextViews
+                    textViewGoldPrice.setText(String.format("Gold Price is = %.2f", r));
+                    textViewPayment.setText(String.format("Your Payment is = %.2f", c));
+                } else {
+                    // Show a Toast if the input fields are empty
+                    Toast.makeText(MainActivity.this, "Please enter values for both fields", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+}
