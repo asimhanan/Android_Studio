@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="@drawable/gradient_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="Nexoin Folder"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:text="Enter your app password"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/password"
+        android:hint="Password"
+        android:background="@drawable/edit_text"
+        android:inputType="textPassword"
+        android:paddingStart="15dp"
+        android:layout_marginTop="25dp"
+        android:drawableLeft="@drawable/lock_24dp"
+        android:drawablePadding="8dp"
+        android:layout_width="match_parent"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/gray"
+        android:layout_height="50dp"/>
+    <Button
+        android:id="@+id/login"
+        android:text="Unlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/blue"
+        android:layout_marginTop="25dp"/>
+</LinearLayout>

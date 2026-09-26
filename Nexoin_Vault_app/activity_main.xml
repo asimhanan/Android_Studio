@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:background="@drawable/gradient_bg"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="My private folders"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:text="Files are kept in this app's private storage."
+        android:layout_marginTop="6dp"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/imagesFolder"
+        android:text="📷  Images"
+        android:gravity="start|center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/teal_200"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:layout_marginTop="24dp"/>
+    <Button
+        android:id="@+id/videosFolder"
+        android:text="▶  Videos"
+        android:gravity="start|center_vertical"
+        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:backgroundTint="@color/teal_200"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/changePassword"
+        android:text="Change password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="@color/dark_red"
+        android:backgroundTint="@color/gradient_end"
+        android:layout_marginTop="30dp"/>
+</LinearLayout>
