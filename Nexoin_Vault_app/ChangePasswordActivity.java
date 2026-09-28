@@ -1,84 +1,51 @@
 package com.example.nexoinvaulit;
 
-
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ChangePasswordActivity extends AppCompatActivity {
-
-    private EditText oldPassword;
-    private EditText newPassword;
-    private EditText confirmPassword;
+    private EditText oldPassword, newPassword, confirmPassword;
     private Button actionButton;
+    private final ExecutorService worker = Executors.newSingleThreadExecutor();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    @Override protected void onCreate(Bundle state) {
+        super.onCreate(state);
         setContentView(R.layout.activity_password);
-
-        TextView title = findViewById(R.id.title);
+        ((TextView) findViewById(R.id.title)).setText("Change password");
         oldPassword = findViewById(R.id.oldPassword);
         newPassword = findViewById(R.id.password);
         confirmPassword = findViewById(R.id.confirm);
         actionButton = findViewById(R.id.action);
-
-        title.setText("Change password");
         actionButton.setText("Save new password");
-
-        oldPassword.setVisibility(android.view.View.VISIBLE);
-
-        actionButton.setOnClickListener(view -> changePassword());
+        oldPassword.setVisibility(View.VISIBLE);
+        actionButton.setOnClickListener(v -> changePassword());
     }
 
     private void changePassword() {
-        String currentPassword = oldPassword.getText().toString();
-        String newPasswordText = newPassword.getText().toString();
-        String confirmPasswordText = confirmPassword.getText().toString();
-
-        if (currentPassword.isEmpty()) {
-            oldPassword.setError("Enter your current password");
-            return;
-        }
-
-        if (newPasswordText.length() < 6) {
-            newPassword.setError("Use at least 6 characters");
-            return;
-        }
-
-        if (!newPasswordText.equals(confirmPasswordText)) {
-            confirmPassword.setError("Passwords do not match");
-            return;
-        }
-
-        try {
-            if (!PasswordUtils.verify(this, currentPassword)) {
-                oldPassword.setError("Current password is incorrect");
-                return;
+        String oldValue = oldPassword.getText().toString();
+        String newValue = newPassword.getText().toString();
+        if (oldValue.isEmpty()) { oldPassword.setError("Enter your current password"); return; }
+        if (newValue.length() < 6) { newPassword.setError("Use at least 6 characters"); return; }
+        if (!newValue.equals(confirmPassword.getText().toString())) { confirmPassword.setError("Passwords do not match"); return; }
+        actionButton.setEnabled(false);
+        worker.execute(() -> {
+            try {
+                PasswordUtils.changePassword(this, oldValue, newValue);
+                runOnUiThread(() -> { Toast.makeText(this, "Password changed successfully", Toast.LENGTH_SHORT).show(); finish(); });
+            } catch (SecurityException wrong) {
+                runOnUiThread(() -> { oldPassword.setError("Current password is incorrect"); actionButton.setEnabled(true); });
+            } catch (Exception error) {
+                runOnUiThread(() -> { Toast.makeText(this, "Could not change password", Toast.LENGTH_LONG).show(); actionButton.setEnabled(true); });
             }
-
-            PasswordUtils.setPassword(this, newPasswordText);
-
-            Toast.makeText(
-                    this,
-                    "Password changed successfully",
-                    Toast.LENGTH_SHORT
-            ).show();
-
-            finish();
-
-        } catch (Exception exception) {
-            Toast.makeText(
-                    this,
-                    "Could not change password",
-                    Toast.LENGTH_LONG
-            ).show();
-        }
+        });
     }
-}
 
+    @Override protected void onDestroy() { worker.shutdownNow(); super.onDestroy(); }
+}
