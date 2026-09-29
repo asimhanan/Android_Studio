@@ -1,10 +1,42 @@
-Key Features
-Dual-Layer Security: Google Sign-In via Firebase for identity authentication, paired with a custom 6-digit passcode for instant local unlock.
+# 🔒 Nexoin Vault
 
-Smart Session Management: Automatically routes returning users directly to the passcode entry screen for quick and secure access.
+**Nexoin Vault** is a secure, lightweight, and local-first Android application designed to keep personal media, documents, and sensitive files private and safe from unauthorized access.
 
-Encrypted Storage: Stores images and videos securely using combined passcode and master-key encryption logic to protect files against unauthorized access.
+---
 
-Media Management: Dedicated folders for organizing private photos and video files seamlessly.
+## ✨ Features
 
-Passcode Management: Built-in option to update or change the security passcode at any time.
+- 🔐 **Secure PIN & Password Access:** Passcode lock screen to prevent unauthorized access.
+- 📁 **Private Media & File Storage:** Hide and manage private photos, videos, and documents.
+- ⚡ **Local-First Privacy:** All encrypted assets stay strictly on your device — no cloud exposure.
+- 🎨 **Clean & Intuitive Interface:** Smooth Material Design user experience tailored for ease of use.
+- 🚀 **Fast Performance:** Optimized local database management and low resource footprint.
+
+---
+
+## 🛠️ Tech Stack & Requirements
+
+| Layer | Technology / Tool |
+| :--- | :--- |
+| **Language** | Java / Kotlin |
+| **IDE** | Android Studio (Ladybug / Jellyfish or higher) |
+| **Min SDK** | API 24 (Android 7.0 Nougat) |
+| **Target SDK** | API 34+ (Android 14) |
+| **UI Design** | XML Layouts with Material Components |
+| **Database/Storage** | SQLite / Room Database / Encrypted SharedPreferences |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- [Android Studio](https://developer.android.com/studio) installed on your computer.
+- Java Development Kit (JDK 17 or later).
+- Android Device or Emulator running Android 7.0 (API level 24) or higher.
+
+### 2. Installation & Setup
+
+Clone the repository and open the project in Android Studio:
+
+```bash
+git clone [https://github.com/asimhanan/Android_Studio.git](https://github.com/asimhanan/Android_Studio.git)
